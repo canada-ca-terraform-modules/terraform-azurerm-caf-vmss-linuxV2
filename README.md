@@ -50,5 +50,8 @@ No requirements.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_loadbalancer"></a> [loadbalancer](#output\_loadbalancer) | n/a |
+| <a name="output_vmss_linux"></a> [vmss\_linux](#output\_vmss\_linux) | n/a |
 <!-- END_TF_DOCS -->
