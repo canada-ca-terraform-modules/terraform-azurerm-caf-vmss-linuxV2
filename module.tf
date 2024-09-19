@@ -1,38 +1,39 @@
 resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
-  name                                              = "${local.vmss_name}-vmss"
-  location                                          = var.location
-  resource_group_name                               = local.resource_group_name
+  name                = "${local.vmss_name}-vmss"
+  location            = var.location
+  resource_group_name = local.resource_group_name
+
   admin_username                                    = try(var.vmss.admin_username, "azureadmin")
   admin_password                                    = local.vm-admin-password
-  instances                                         = try(var.vmss.instances, 0)
   capacity_reservation_group_id                     = try(var.vmss.capacity_reservation_group_id, null)
-  computer_name_prefix                              = try(var.vmss.computer_name_prefix, "vmsslin-") # Optional. eg: "devopsw-"
+  computer_name_prefix                              = try(var.vmss.computer_name_prefix, "vmsslin-")
   custom_data                                       = var.custom_data
   disable_password_authentication                   = try(var.vmss.disable_password_authentication, false)
   do_not_run_extensions_on_overprovisioned_machines = try(var.vmss.do_not_run_extensions_on_overprovisioned_machines, false)
   edge_zone                                         = try(var.vmss.edge_zone, null)
   encryption_at_host_enabled                        = try(var.vmss.encryption_at_host_enabled, null)
-  extension_operations_enabled = try(var.vmss.extension_operations_enabled, null)
-  extensions_time_budget       = try(var.vmss.extensions_time_budget, null)
-  eviction_policy              = try(var.vmss.eviction_policy, null)
-  health_probe_id = try(var.vmss.health_probe_id, null)
-  host_group_id   = try(var.vmss.host_group_id, null)
-  max_bid_price = try(var.vmss.max_bid_price, null)
-  overprovision = try(var.vmss.overprovision, null)
-  platform_fault_domain_count  = try(var.vmss.platform_fault_domain_count, null)
-  priority                     = try(var.vmss.priority, null)
-  provision_vm_agent           = try(var.vmss.provision_vm_agent, null)
-  proximity_placement_group_id = try(var.vmss.proximity_placement_group_id, null)
-  secure_boot_enabled    = try(var.vmss.secure_boot_enabled, null)
-  single_placement_group = try(var.vmss.single_placement_group, null)
+  extension_operations_enabled                      = try(var.vmss.extension_operations_enabled, null)
+  extensions_time_budget                            = try(var.vmss.extensions_time_budget, null)
+  eviction_policy                                   = try(var.vmss.eviction_policy, null)
+  health_probe_id                                   = try(var.vmss.health_probe_id, null)
+  host_group_id                                     = try(var.vmss.host_group_id, null)
+  instances                                         = try(var.vmss.instances, 0)
+  max_bid_price                                     = try(var.vmss.max_bid_price, null)
+  overprovision                                     = try(var.vmss.overprovision, null)
+  platform_fault_domain_count                       = try(var.vmss.platform_fault_domain_count, null)
+  priority                                          = try(var.vmss.priority, null)
+  provision_vm_agent                                = try(var.vmss.provision_vm_agent, null)
+  proximity_placement_group_id                      = try(var.vmss.proximity_placement_group_id, null)
+  secure_boot_enabled                               = try(var.vmss.secure_boot_enabled, null)
+  single_placement_group                            = try(var.vmss.single_placement_group, null)
   sku                                               = var.vmss.sku
-  source_image_id        = try(var.vmss.source_image_id, null)
-  tags = merge(var.tags, try(var.vmss.tags, {}))
-  upgrade_mode = try(var.vmss.upgrade_mode, null)
-  user_data    = var.user_data
-  vtpm_enabled = try(var.vmss.vtpm_enabled, null)
-  zone_balance = try(var.vmss.zone_balance, null)
-  zones        = try(var.vmss.zones, null)
+  source_image_id                                   = try(var.vmss.source_image_id, null)
+  tags                                              = merge(var.tags, try(var.vmss.tags, {}))
+  upgrade_mode                                      = try(var.vmss.upgrade_mode, null)
+  user_data                                         = var.user_data
+  vtpm_enabled                                      = try(var.vmss.vtpm_enabled, null)
+  zone_balance                                      = try(var.vmss.zone_balance, null)
+  zones                                             = try(var.vmss.zones, null)
 
   dynamic "additional_capabilities" {
     for_each = try(var.vmss.additional_capabilities, null) != null ? [1] : []

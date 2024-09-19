@@ -1,4 +1,9 @@
 # AzureRM VMSS Linux V2
+
+## Terraform variables for this module
+
+[./ESLZ/vmss-linuxV2.tfvars](./ESLZ/vmss-linuxV2.tfvars)
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

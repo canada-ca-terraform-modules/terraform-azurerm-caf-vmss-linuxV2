@@ -1,5 +1,5 @@
 locals {
-  vmss_linux_regex           = "/[//\"'\\[\\]:|<>+=;,?*@&]/" # Can't include those characters in windows_virtual_machine name: \/"'[]:|<>+=;,?*@&
+  vmss_linux_regex     = "/[//\"'\\[\\]:|<>+=;,?*@&]/" # Can't include those characters in windows_virtual_machine name: \/"'[]:|<>+=;,?*@&
   env_4                = substr(var.env, 0, 4)
   serverType_3         = "SLG"
   postfix_3            = substr(var.vmss.postfix, 0, 3)
