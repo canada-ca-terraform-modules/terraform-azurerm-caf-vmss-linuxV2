@@ -52,6 +52,6 @@ No requirements.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_loadbalancer"></a> [loadbalancer](#output\_loadbalancer) | n/a |
-| <a name="output_vmss_linux"></a> [vmss\_linux](#output\_vmss\_linux) | n/a |
+| <a name="output_loadbalancer"></a> [loadbalancer](#output\_loadbalancer) | Load Balancer object |
+| <a name="output_vmss_linux"></a> [vmss\_linux](#output\_vmss\_linux) | VMSS Linux object |
 <!-- END_TF_DOCS -->
