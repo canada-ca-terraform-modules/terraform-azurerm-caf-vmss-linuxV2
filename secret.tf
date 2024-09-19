@@ -10,16 +10,16 @@ locals {
   kv_resource_group_name    = try(var.vmss.key_vault.resource_group_name, "Keyvault")
 }
 
-# Need to get info about the subscription key vault. If password_overwrite is true, then don't bother since we  won't use it
+# Need to get info about the subscription key vault.
 data "azurerm_key_vault" "key_vault" {
-  count               = try(var.vmss.password_overwrite, false) || try(var.vmss.disable_password_authentication, true) ? 0 : 1
+  count               = try(var.vmss.admin_password, "") == "" && !try(var.vmss.disable_password_authentication, false) ? 1 : 0
   name                = try(var.vmss.key_vault.name, local.kv_name)
   resource_group_name = strcontains(local.kv_resource_group_name, "/resourceGroups/") ? regex("[^\\/]+$", local.kv_resource_group_name) : var.resource_groups[local.kv_resource_group_name].name
 }
 
 # Generate a password if it will be necessary. Since it it only an inital password, ignore all changes to it
 resource "random_password" "vm-admin-password" {
-  count            = try(data.azurerm_key_vault.key_vault[0].enable_rbac_authorization, false) && !try(var.vmss.password_overwrite, false) && !try(var.vmss.disable_password_authentication, true) ? 1 : 0
+  count            = try(var.vmss.admin_password, "") == "" && !try(var.vmss.disable_password_authentication, false) ? 1 : 0
   length           = 16
   special          = true
   override_special = "!#$%&*"
@@ -35,7 +35,7 @@ resource "random_password" "vm-admin-password" {
 
 # Creates a secret in the subscription keyvault if a generated password is necessary. Since it will be only an inital password, ignore all changes to it
 resource "azurerm_key_vault_secret" "vm-admin-password" {
-  count        = try(data.azurerm_key_vault.key_vault[0].enable_rbac_authorization, false) && !try(var.vmss.password_overwrite, false) && !try(var.vmss.disable_password_authentication, true) ? 1 : 0
+  count        = try(var.vmss.admin_password, "") == "" && !try(var.vmss.disable_password_authentication, false) ? 1 : 0
   name         = "${local.vmss_name}-vm-admin-password"
   value        = random_password.vm-admin-password[0].result
   key_vault_id = data.azurerm_key_vault.key_vault[0].id

@@ -26,7 +26,7 @@ module "boot_diagnostic_storage" {
 
 # Create a user assigned identity for the VM if one is not provided
 resource "azurerm_user_assigned_identity" "user_assigned_identity_vmss_linux" {
-  count = try(var.vmss.identity.type, "UserAssigned") == "UserAssigned" ? (try(var.vmss.identity.identity_ids, []) == [] ? 1 : 0) : 0
+  count = try(var.vmss.boot_diagnostic.use_managed_storage_account, true) ? 0 : (try(var.vmss.identity.type, "UserAssigned") == "UserAssigned" ? (try(var.vmss.identity.identity_ids, []) == [] ? 1 : 0) : 0)
 
   location            = var.location
   name                = "${local.vmss_name}-vmss-uai"
