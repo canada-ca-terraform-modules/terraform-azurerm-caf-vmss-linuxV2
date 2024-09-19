@@ -1,4 +1,4 @@
-# terraform-azurerm-caf-vmss-windows
+# AzureRM VMSS Linux V2
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

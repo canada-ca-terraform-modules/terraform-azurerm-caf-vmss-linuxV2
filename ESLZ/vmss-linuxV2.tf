@@ -1,9 +1,9 @@
-variable "vmss_linux" {
+variable "vmss_linuxV2" {
   type = any
 }
 
-module "vmss_linux" {
-  for_each = var.vmss_linux
+module "vmss_linuxV2" {
+  for_each = var.vmss_linuxV2
   source   = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-vmss-linuxV2?ref=v1.0.0"
 
   location          = var.location
