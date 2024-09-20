@@ -1,6 +1,5 @@
 vmss_linuxV2 = {
   devops = {
-    # custom_name = "some-custom-name" # Optional. ONLY use if you really really really don't want to use the auto generated name
     userDefinedString    = "devops" # Max 55 chars
     postfix              = "01"
     computer_name_prefix = "vmsslin-" # (Optional) The prefix which should be used for the name of the Virtual Machines in this Scale Set. Default: "vmsslin-"
@@ -103,9 +102,9 @@ vmss_linuxV2 = {
 
       frontend_ip_configuration = {
         feipc1 = {
-          subnet                                             = "MAZ"         # (Required) The name or the resource id of the Subnet which should be used for this IP Configuration
+          subnet = "MAZ" # (Required) The name or the resource id of the Subnet which should be used for this IP Configuration
           # private_ip_address                                 = "10.10.10.10" # (Optional) Private IP Address to assign to the Load Balancer. The last one and first four IPs in any range are reserved and cannot be manually assigned.
-          private_ip_address_allocation                      = "Dynamic"     # (Optional) The allocation method for the Private IP Address used by this Load Balancer. Possible values as Dynamic and Static.
+          private_ip_address_allocation = "Dynamic" # (Optional) The allocation method for the Private IP Address used by this Load Balancer. Possible values as Dynamic and Static.
           # private_ip_address_version                         = "IPv4"        # (Optional) The version of IP that the Private IP Address is. Possible values are IPv4 or IPv6.
           # public_ip_address_id                               = ""            # (Optional) The ID of a Public IP Address which should be associated with the Load Balancer.
           # public_ip_prefix_id                                = ""            # (Optional) The ID of a Public IP Prefix which should be associated with the Load Balancer. Public IP Prefix can only be used with outbound rules.
