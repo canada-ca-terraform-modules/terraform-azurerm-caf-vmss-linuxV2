@@ -52,15 +52,15 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
   }
 
   dynamic "automatic_os_upgrade_policy" {
-    for_each = try(var.vmss.automatic_os_upgrade_policy, null) != null ? [1] : []
+    for_each = try(var.vmss.automatic_os_upgrade_policy, {})
     content {
-      disable_automatic_rollback  = try(automatic_os_upgrade_policy.value.disable_automatic_rollback, null)
-      enable_automatic_os_upgrade = try(automatic_os_upgrade_policy.value.enable_automatic_os_upgrade, null)
+      disable_automatic_rollback = try(automatic_os_upgrade_policy.value.disable_automatic_rollback, false)
+      enable_automatic_os_upgrade = try(automatic_os_upgrade_policy.enable_automatic_os_upgrade, true)
     }
   }
 
   dynamic "automatic_instance_repair" {
-    for_each = try(var.vmss.automatic_instance_repair, null) != null ? [1] : []
+    for_each = try(var.vmss.automatic_instance_repair, {})
     content {
       enabled      = try(automatic_instance_repair.value.enabled, null)
       grace_period = try(automatic_instance_repair.value.grace_period, null)
@@ -152,7 +152,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
           load_balancer_backend_address_pool_ids       = try(var.vmss.lb, null) != null ? [module.load_balancer[0].loadbalancer_backend_address_pool.id] : []
           load_balancer_inbound_nat_rules_ids          = try(ip_configuration.value.load_balancer_inbound_nat_rules_ids, [])
           dynamic "public_ip_address" {
-            for_each = try(ip_configuration.value.public_ip_address, null) != null ? [1] : []
+            for_each = try(ip_configuration.value.public_ip_address, {})
             content {
               name                    = "${local.vmss_name}-pip-${ip_configuration.key}"
               domain_name_label       = try(public_ip_address.value.domain_name_label, null)
@@ -193,7 +193,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
   }
 
   dynamic "plan" {
-    for_each = try(var.vmss.plan, null) != null ? [1] : []
+    for_each = try(var.vmss.plan, {})
     content {
       name      = plan.value.name
       product   = plan.value.product
@@ -202,7 +202,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
   }
 
   dynamic "rolling_upgrade_policy" {
-    for_each = try(var.vmss.rolling_upgrade_policy, null) != null ? [1] : []
+    for_each = try(var.vmss.rolling_upgrade_policy, {})
     content {
       cross_zone_upgrades_enabled             = try(rolling_upgrade_policy.value.cross_zone_upgrades_enabled, null)
       max_batch_instance_percent              = try(rolling_upgrade_policy.value.max_batch_instance_percent, null)
@@ -215,7 +215,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
   }
 
   dynamic "scale_in" {
-    for_each = try(var.vmss.scale_in, null) != null ? [1] : []
+    for_each = try(var.vmss.scale_in, {})
     content {
       rule                   = try(scale_in.value.rule, null)
       force_deletion_enabled = try(scale_in.value.force_deletion_enabled, null)
@@ -243,7 +243,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
   }
 
   dynamic "spot_restore" {
-    for_each = try(var.vmss.spot_restore, null) != null ? [1] : []
+    for_each = try(var.vmss.spot_restore, {})
     content {
       enabled = try(spot_restore.value.enabled, null)
       timeout = try(spot_restore.value.timeout, null)
@@ -251,7 +251,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
   }
 
   dynamic "termination_notification" {
-    for_each = try(var.vmss.termination_notification, false) != false ? [1] : []
+    for_each = try(var.vmss.termination_notification, {})
     content {
       enabled = termination_notification.value.enabled
       timeout = try(termination_notification.value.timeout, null)
