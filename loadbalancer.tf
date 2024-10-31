@@ -1,6 +1,6 @@
 module "load_balancer" {
   count = try(var.vmss.lb, null) != null ? 1 : 0
-  source   = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-load_balancer.git?v1.0.1"
+  source   = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-load_balancer.git?ref=v1.0.2"
 
   location          = var.location
   subnets           = var.subnets
