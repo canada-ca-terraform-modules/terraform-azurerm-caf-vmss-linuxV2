@@ -6,7 +6,7 @@ variable "vmss_linuxV2" {
 
 module "vmss_linuxV2" {
   for_each = var.vmss_linuxV2
-  source   = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-vmss-linuxV2?ref=v1.0.6"
+  source   = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-vmss-linuxV2?ref=v1.0.7"
 
   location          = var.location
   subnets           = local.subnets
