@@ -7,7 +7,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
   admin_password                                    = local.vm-admin-password
   capacity_reservation_group_id                     = try(var.vmss.capacity_reservation_group_id, null)
   computer_name_prefix                              = try(var.vmss.computer_name_prefix, "vmsslin-")
-  custom_data                                       = var.custom_data
+  custom_data                                       = var.custom_data == "install-ca-certs" ? data.http.custom_data[0].response_body_base64 : var.custom_data
   disable_password_authentication                   = try(var.vmss.disable_password_authentication, false)
   do_not_run_extensions_on_overprovisioned_machines = try(var.vmss.do_not_run_extensions_on_overprovisioned_machines, false)
   edge_zone                                         = try(var.vmss.edge_zone, null)
