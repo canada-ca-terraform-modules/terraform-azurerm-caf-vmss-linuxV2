@@ -55,7 +55,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
     for_each = try(var.vmss.automatic_os_upgrade_policy, {})
     content {
       disable_automatic_rollback = try(automatic_os_upgrade_policy.value.disable_automatic_rollback, false)
-      enable_automatic_os_upgrade = try(automatic_os_upgrade_policy.enable_automatic_os_upgrade, true)
+      enable_automatic_os_upgrade = try(automatic_os_upgrade_policy.value.enable_automatic_os_upgrade, true)
     }
   }
 
