@@ -77,7 +77,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
   dynamic "data_disk" {
     for_each = try(var.vmss.data_disk, {})
     content {
-      name                           = "${local.vmss_name}-datadisk${each.value.lun + 1}"
+      name                           = "${local.vmss_name}-datadisk${data_disk.value.lun + 1}"
       caching                        = try(data_disk.value.caching, "ReadWrite")
       create_option                  = try(data_disk.value.create_option, "Empty")
       disk_size_gb                   = try(data_disk.value.disk_size_gb, 256)
@@ -105,7 +105,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
         for_each = try(extension.value.protected_settings_from_key_vault, {})
         content {
           secret_url      = protected_settings_from_key_vault.value.secret_url
-          source_vault_id = rotected_settings_from_key_vault.value.source_vault_id
+          source_vault_id = protected_settings_from_key_vault.value.source_vault_id
         }
       }
       provision_after_extensions = try(extension.value.provision_after_extensions, null)
@@ -160,8 +160,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
               dynamic "ip_tag" {
                 for_each = try(public_ip_address.value.ip_tags, {})
                 content {
-                  tag  = ip_tags.value.tag
-                  type = ip_tags.value.type
+                  tag  = ip_tag.value.tag
+                  type = ip_tag.value.type
                 }
               }
               public_ip_prefix_id = try(public_ip_address.value.public_ip_prefix_id, null)
@@ -217,8 +217,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
   dynamic "scale_in" {
     for_each = try(var.vmss.scale_in, false) != false ? [1] : []
     content {
-      rule                   = try(scale_in.value.rule, null)
-      force_deletion_enabled = try(scale_in.value.force_deletion_enabled, null)
+      rule                   = try(var.vmss.scale_in.rule, null)
+      force_deletion_enabled = try(var.vmss.scale_in.force_deletion_enabled, null)
     }
   }
 
