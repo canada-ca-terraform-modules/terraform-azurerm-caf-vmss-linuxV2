@@ -113,6 +113,11 @@ run "default_values" {
     condition     = azurerm_linux_virtual_machine_scale_set.vmss_linux.resilient_vm_deletion_enabled == null
     error_message = "resilient_vm_deletion_enabled must default to null"
   }
+
+  assert {
+    condition     = azurerm_linux_virtual_machine_scale_set.vmss_linux.encryption_at_host_enabled == true
+    error_message = "encryption_at_host_enabled must default to true (secure default) when not explicitly set"
+  }
 }
 
 run "v5_network_interface_renamed_args" {

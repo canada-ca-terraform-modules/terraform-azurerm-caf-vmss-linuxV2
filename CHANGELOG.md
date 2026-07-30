@@ -3,7 +3,15 @@
 All notable changes to this module will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.1.1] - 2026-07-30
+
+### Fixed
+
+- **State-breaking:** Added `moved` blocks for `azurerm_lb.loadbalancer`, `azurerm_lb_backend_address_pool.loadbalancer-lbbp`, `azurerm_lb_probe.loadbalancer-lbhp`, and `azurerm_lb_rule.loadbalancer-lbr` so existing deployments migrate state into the `module.load_balancer` submodule call instead of being destroyed and recreated. This gap predates the azurerm v5 upgrade but was only surfaced by an upgrade probe on this branch.
+- **Security regression:** Reverted `encryption_at_host_enabled` default from `false` back to `true`. The `false` default (introduced in v1.0.6) silently disabled host encryption for any caller not explicitly setting this field. Callers relying on the `false` default must now set `vmss.encryption_at_host_enabled = false` explicitly.
+
 ## [1.1.0] - 2026-07-29
+
 
 ### Changed
 
