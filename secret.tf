@@ -14,7 +14,7 @@ locals {
 data "azurerm_key_vault" "key_vault" {
   count               = try(var.vmss.admin_password, "") == "" && !try(var.vmss.disable_password_authentication, false) ? 1 : 0
   name                = try(var.vmss.key_vault.name, local.kv_name)
-  resource_group_name = strcontains(local.kv_resource_group_name, "/resourceGroups/") ? regex("[^\\/]+$", local.kv_resource_group_name) : var.resource_groups[local.kv_resource_group_name].name
+  resource_group_name = strcontains(local.kv_resource_group_name, "/resourceGroups/") ? regex("[^/]+$", local.kv_resource_group_name) : var.resource_groups[local.kv_resource_group_name].name
 }
 
 # Generate a password if it will be necessary. Since it it only an inital password, ignore all changes to it

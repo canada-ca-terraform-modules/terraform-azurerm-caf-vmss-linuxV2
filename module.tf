@@ -29,6 +29,8 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
   sku                                               = var.vmss.sku
   source_image_id                                   = try(var.vmss.source_image_id, null)
   tags                                              = merge(var.tags, try(var.vmss.tags, {}))
+  resilient_vm_creation_enabled                     = try(var.vmss.resilient_vm_creation_enabled, null)
+  resilient_vm_deletion_enabled                     = try(var.vmss.resilient_vm_deletion_enabled, null)
   upgrade_mode                                      = try(var.vmss.upgrade_mode, null)
   user_data                                         = var.user_data
   vtpm_enabled                                      = try(var.vmss.vtpm_enabled, null)
@@ -54,8 +56,10 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
   dynamic "automatic_os_upgrade_policy" {
     for_each = try(var.vmss.automatic_os_upgrade_policy, {})
     content {
-      disable_automatic_rollback = try(automatic_os_upgrade_policy.value.disable_automatic_rollback, false)
-      enable_automatic_os_upgrade = try(automatic_os_upgrade_policy.value.enable_automatic_os_upgrade, true)
+      # v5 renamed fields; fall back to v4 names for backward-compat
+      # disable_automatic_rollback (v4) had inverted boolean → automatic_rollback_enabled (v5)
+      automatic_rollback_enabled   = try(automatic_os_upgrade_policy.value.automatic_rollback_enabled, !automatic_os_upgrade_policy.value.disable_automatic_rollback)
+      automatic_os_upgrade_enabled = try(automatic_os_upgrade_policy.value.automatic_os_upgrade_enabled, automatic_os_upgrade_policy.value.enable_automatic_os_upgrade)
     }
   }
 
@@ -64,6 +68,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
     content {
       enabled      = try(automatic_instance_repair.value.enabled, null)
       grace_period = try(automatic_instance_repair.value.grace_period, null)
+      action       = try(automatic_instance_repair.value.action, null)
     }
   }
 
@@ -77,16 +82,17 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
   dynamic "data_disk" {
     for_each = try(var.vmss.data_disk, {})
     content {
-      name                           = "${local.vmss_name}-datadisk${data_disk.value.lun + 1}"
-      caching                        = try(data_disk.value.caching, "ReadWrite")
-      create_option                  = try(data_disk.value.create_option, "Empty")
-      disk_size_gb                   = try(data_disk.value.disk_size_gb, 256)
-      disk_encryption_set_id         = try(data_disk.value.disk_encryption_set_id, null)
-      lun                            = data_disk.value.lun
-      storage_account_type           = try(data_disk.value.storage_account_type, "Standard_LRS")
-      ultra_ssd_disk_iops_read_write = try(data_disk.value.ultra_ssd_disk_iops_read_write, null)
-      ultra_ssd_disk_mbps_read_write = try(data_disk.value.ultra_ssd_disk_mbps_read_write, null)
-      write_accelerator_enabled      = try(data_disk.value.write_accelerator_enabled, false)
+      name                   = "${local.vmss_name}-datadisk${data_disk.value.lun + 1}"
+      caching                = try(data_disk.value.caching, "ReadWrite")
+      create_option          = try(data_disk.value.create_option, "Empty")
+      disk_size_gb           = try(data_disk.value.disk_size_gb, 256)
+      disk_encryption_set_id = try(data_disk.value.disk_encryption_set_id, null)
+      lun                    = data_disk.value.lun
+      storage_account_type   = try(data_disk.value.storage_account_type, "Standard_LRS")
+      # v5 renamed ultra_ssd_disk_iops_read_write → disk_iops_read_write; fallback to old name
+      disk_iops_read_write      = try(data_disk.value.disk_iops_read_write, data_disk.value.ultra_ssd_disk_iops_read_write, null)
+      disk_mbps_read_write      = try(data_disk.value.disk_mbps_read_write, data_disk.value.ultra_ssd_disk_mbps_read_write, null)
+      write_accelerator_enabled = try(data_disk.value.write_accelerator_enabled, false)
     }
   }
 
@@ -135,11 +141,15 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss_linux" {
   dynamic "network_interface" {
     for_each = var.vmss.nic
     content {
-      name                          = "${local.vmss_name}-${network_interface.key}"
-      dns_servers                   = try(network_interface.value.dns_servers, null)
-      enable_accelerated_networking = try(network_interface.value.enable_accelerated_networking, false)
-      enable_ip_forwarding          = try(network_interface.value.enable_ip_forwarding, false)
-      primary                       = try(network_interface.value.primary, true)
+      name           = "${local.vmss_name}-${network_interface.key}"
+      auxiliary_mode = try(network_interface.value.auxiliary_mode, null)
+      auxiliary_sku  = try(network_interface.value.auxiliary_sku, null)
+      dns_servers    = try(network_interface.value.dns_servers, null)
+      # v5 renamed enable_* → *_enabled; fall back to old names for backward-compat
+      accelerated_networking_enabled = try(network_interface.value.accelerated_networking_enabled, network_interface.value.enable_accelerated_networking, false)
+      ip_forwarding_enabled          = try(network_interface.value.ip_forwarding_enabled, network_interface.value.enable_ip_forwarding, false)
+      network_security_group_id      = try(network_interface.value.network_security_group_id, null)
+      primary                        = try(network_interface.value.primary, true)
 
       dynamic "ip_configuration" {
         for_each = var.vmss.nic[network_interface.key].ip_configuration
