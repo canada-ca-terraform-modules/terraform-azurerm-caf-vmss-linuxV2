@@ -1,3 +1,7 @@
+terraform {
+  required_version = ">= 1.9"
+}
+
 variable "vmss_linuxV2" {
   type        = any
   default     = {}
@@ -6,7 +10,7 @@ variable "vmss_linuxV2" {
 
 module "vmss_linuxV2" {
   for_each = var.vmss_linuxV2
-  source   = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-vmss-linuxV2?ref=v1.0.10"
+  source   = "github.com/canada-ca-terraform-modules/terraform-azurerm-caf-vmss-linuxV2?ref=v1.1.0"
 
   location          = var.location
   subnets           = local.subnets
