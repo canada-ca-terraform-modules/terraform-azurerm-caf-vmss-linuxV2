@@ -48,9 +48,14 @@ variable "subnets" {
 }
 
 variable "custom_data" {
-  description = "(Optional) The Base64-Encoded Custom Data which should be used for this Virtual Machine Scale Set."
+  description = "Base64 encoded file representing custom data script for the VM. Also accepts the keywords \"install-ca-certs\" (deprecated alias) or \"cloud-init-default\", both resolving to the same G3/non-G3-specific cloud-init-default.yaml public blob based on var.env, or a URL to fetch the script/cloud-init content from directly."
   type        = string
   default     = null
+
+  validation {
+    condition     = var.custom_data == null || try(contains(["install-ca-certs", "cloud-init-default"], var.custom_data), false) || can(regex("^https?://", var.custom_data)) || can(base64decode(var.custom_data))
+    error_message = "custom_data must be null, one of the keywords \"install-ca-certs\" or \"cloud-init-default\", a http(s):// URL, or a base64-encoded string."
+  }
 }
 
 variable "user_data" {
