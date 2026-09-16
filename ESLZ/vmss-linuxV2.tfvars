@@ -14,7 +14,7 @@ vmss_linuxV2 = {
       storage_account_resource_id = ""   # (Optional) The resource ID of the Storage Account to use for Boot Diagnostics. Default: Create storage account for vmss boot diagnostic and serial console.
     }
 
-    instances   = 1                  # (Optional) The number of Virtual Machines in the Scale Set. Defaults to 0.
+    instances   = 1                    # (Optional) The number of Virtual Machines in the Scale Set. Defaults to 0.
     custom_data = "cloud-init-default" # Can also be a relative path to a local file, a URL, or the "install-ca-certs" keyword
 
 
