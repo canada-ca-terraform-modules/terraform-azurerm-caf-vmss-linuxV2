@@ -15,7 +15,7 @@ vmss_linuxV2 = {
     }
 
     instances   = 1                  # (Optional) The number of Virtual Machines in the Scale Set. Defaults to 0.
-    custom_data = "install-ca-certs" # Optional: Set this value with the relative path to the file from your CWD.
+    custom_data = "cloud-init-default" # Can also be a relative path to a local file, a URL, or the "install-ca-certs" keyword
 
 
     # At least one nic is required. If more than one is present, the first nic in the list will be the primary one.

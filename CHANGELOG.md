@@ -3,6 +3,18 @@
 All notable changes to this module will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Added
+
+- `custom_data` now also accepts an arbitrary `http://`/`https://` URL, fetched and base64-encoded the same way as the existing `install-ca-certs` keyword (previously only that hard-coded keyword or a base64-encoded value/local file path were supported).
+- `custom_data` accepts a new `"cloud-init-default"` keyword, resolving to a G3/non-G3-specific `cloud-init-default.yaml` public blob based on `var.env`.
+
+### Changed
+
+- `install-ca-certs` is now a deprecated alias of `cloud-init-default`: it resolves to the same `cloud-init-default.yaml`, which installs the CA certs and also runs the original `linux-ubuntu-customdata-default.sh` script via `runcmd` (previously `install-ca-certs` fetched that `.sh` script directly).
+- `ESLZ/vmss-linuxV2.tfvars` example now defaults `custom_data` to `"cloud-init-default"` instead of `"install-ca-certs"`.
+
 ## [1.1.1] - 2026-07-30
 
 ### Fixed

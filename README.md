@@ -45,7 +45,7 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_custom_data"></a> [custom\_data](#input\_custom\_data) | (Optional) The Base64-Encoded Custom Data which should be used for this Virtual Machine Scale Set. | `string` | `null` | no |
+| <a name="input_custom_data"></a> [custom\_data](#input\_custom\_data) | Base64 encoded file representing custom data script for the VM. Also accepts the keywords "install-ca-certs" (deprecated alias) or "cloud-init-default", both resolving to the same G3/non-G3-specific cloud-init-default.yaml public blob based on var.env, or a URL to fetch the script/cloud-init content from directly. | `string` | `null` | no |
 | <a name="input_env"></a> [env](#input\_env) | (Required) 4 character string defining the environment name prefix for the VM | `string` | n/a | yes |
 | <a name="input_group"></a> [group](#input\_group) | (Required) Character string defining the group for the target subscription | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | Azure location for the VM | `string` | `"canadacentral"` | no |
